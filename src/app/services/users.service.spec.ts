@@ -1,49 +1,72 @@
 import { TestBed } from '@angular/core/testing';
 import { UsersService } from './users.service';
-import { provideHttpClient } from "@angular/common/http";
-import { provideHttpClientTesting, HttpTestingController } from "@angular/common/http/testing";
+import { provideHttpClient } from '@angular/common/http';
+import {
+  provideHttpClientTesting,
+  HttpTestingController,
+} from '@angular/common/http/testing';
 
-describe('Prueba para servicio Users', () => {
+//Definir nuestro bloque de prueba
+describe('UsersService', () => {
   let service: UsersService;
-  let mockHttp: HttpTestingController;
-  const urlTest = "http://localhost:9000/usuarios/";
+  let httpMock: HttpTestingController;
+  const urlTest = 'http://localhost:9000/usuarios';
+  const emailTest = 'alvaro@gmail.com';
+  const passwordTest = '123';
+  const tokenTest = 'ab367627828278jf378edla89m';
+  const fullName = 'Alvaro Gil';
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         UsersService,
         provideHttpClient(),
-        provideHttpClientTesting()
-      ]
+        provideHttpClientTesting(),
+      ],
     });
-
     service = TestBed.inject(UsersService);
-    mockHttp = TestBed.inject(HttpTestingController);
+    httpMock = TestBed.inject(HttpTestingController)
   });
 
   afterAll(() => {
-    mockHttp.verify(); // Verifica que no haya peticiones pendientes después de las pruebas
-  });
+    httpMock.verify(); 
+    
+})
 
-  it('Debería hacer una petición GET para mostrar los usuarios', () => {
-    const mockUsers = [
-      { fullName: 'Pepito Perez', email: 'pepito@gmail.com', password: '123' },
-      { fullName: 'Pepita Perez', email: 'pepita@gmail.com', password: '123' }
-    ];
 
-    const mockResponse = {
-      mensaje: 'Se encontraron usuarios almacenados',
-      numeroUsuarios: mockUsers.length,
-      datos: mockUsers
-    };
+  it('deberia hacer una petición GET para mostrar los usuarios exitosamente', () => {
+      const mockUsers = [
+        {
+          fullName: 'pepito G',
+          email: 'pepitog@gmail.com',
+          password: "123"
+        },
+        {
+          fullName: 'Alvaro',
+          email: 'alvaro@gmail.com',
+          password: "123"
+        }
+        
+      ]
+      const mockResponse = {
+        mensaje: "Los usuarios",
+        data: mockUsers,
+        numeroUsers: mockUsers.length
+      }
 
-    service.getUser().subscribe((res) => {
-      expect(res).toEqual(mockResponse); // Validar la respuesta
-    });
+      service.getUser().subscribe(
+        (res) => {
+          expect(res).toEqual(mockResponse)
+        }
+      )
 
-    const req = mockHttp.expectOne(urlTest);
-    expect(req.request.method).toBe('GET'); // Validar que el método sea GET
+      // garantizar que la peticion se esta haciendo a la url
+      const peticion = httpMock.expectOne(urlTest)
 
-    req.flush(mockResponse); // Simular la respuesta del servidor
-  });
+      //garantizar el metodo
+      expect(peticion.request.method).toBe('GET')
+
+      // Simula la respuesta del SERVIDOR
+      peticion.flush(mockResponse)
+  })
 });
