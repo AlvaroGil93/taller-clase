@@ -13,7 +13,7 @@ describe('UsersService', () => {
   const urlTest = 'http://localhost:9000/usuarios';
   const emailTest = 'alvaro@gmail.com';
   const passwordTest = '123';
-  const tokenTest = 'ab367627828278jf378edla89m';
+  const tokenTest = 'ab367627828mhmbuy';
   const fullName = 'Alvaro Gil';
 
   beforeEach(() => {
@@ -36,16 +36,9 @@ describe('UsersService', () => {
 
   it('deberia hacer una petición GET para mostrar los usuarios exitosamente', () => {
       const mockUsers = [
+        {fullName: 'pepito G',email: 'pepitog@gmail.com',password: "123"},
         {
-          fullName: 'pepito G',
-          email: 'pepitog@gmail.com',
-          password: "123"
-        },
-        {
-          fullName: 'Alvaro',
-          email: 'alvaro@gmail.com',
-          password: "123"
-        }
+          fullName: 'Alvaro',email: 'alvaro@gmail.com',password: "123"}
         
       ]
       const mockResponse = {
@@ -66,7 +59,7 @@ describe('UsersService', () => {
       //garantizar el metodo
       expect(peticion.request.method).toBe('GET')
 
-      // Simula la respuesta del SERVIDOR
+      // Simula la respuesta del servidor
       peticion.flush(mockResponse)
   })
 });
